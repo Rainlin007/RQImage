@@ -44,27 +44,85 @@ void MainWindow::initUI()
     connect(ui->toolButton,SIGNAL(clicked()),ui->actionReset,SLOT(trigger()));
     connect(ui->toolButton_6,SIGNAL(clicked()),ui->actionThreshold,SLOT(trigger()));
 
+
+
+    //listView
+    ui->listWidget_2->setContextMenuPolicy(Qt::CustomContextMenu);
+
+
+    //show menu
+    list_m_contextMenu = new QMenu();
+    list_m_contextMenu->addAction(ui->actionRemove_Image);
+    list_m_contextMenu->addAction(ui->actionRename);
+
+    //init GraphicsView
+    ui->graphicsView->setScene(&scene_mainshow);
+    ui->graphicsView->show();
 }
 
-void MainWindow::setOverlayer(QPixmap & p)
-{
-    pixmap_overlayer=p;
-}
 void MainWindow::showOverlayer(bool status)
 {
     scene_mainshow.clear();
-    overlayer_show=status;
     if(status==false)
     {
-        scene_mainshow.addPixmap(pixmap_mainshow);
+        scene_mainshow.addPixmap(RModel::getInstance()->getCurrentPixmap());
     }else
     {
-        scene_mainshow.addPixmap(pixmap_mainshow);
-        scene_mainshow.addPixmap(pixmap_overlayer);
+        scene_mainshow.addPixmap(RModel::getInstance()->getCurrentPixmap());
+        scene_mainshow.addPixmap(RModel::getInstance()->getOverlayer());
+    }
+    scene_mainshow.update();
+}
+
+void MainWindow::setCurrentImage(int pm_num,QString text)
+{
+    if(pm_num==-2)//called when image removed
+    {
+        scene_mainshow.clear();
+        RModel::getInstance()->cur_num=-2;
+        scene_mainshow.setSceneRect(QRectF(0,0,0,0));
+        RController::genImageInfo();
+        return;
     }
 
-    scene_mainshow.update();
 
+    if(pm_num!=-1)//current image
+    {
+        RModel::getInstance()->cur_num=pm_num;
+    }
+    scene_mainshow.clear();
+    QPixmap cp=RModel::getInstance()->getCurrentPixmap();
+
+    scene_mainshow.setSceneRect(QRectF(0,0,cp.width(),cp.height()));
+    scene_mainshow.addPixmap(cp);
+
+    RController::genImageInfo();
+    if(text!="")
+    {
+        this->setWindowTitle(text + " - RQImage");
+    }
+}
+void MainWindow::setInfo(QString info)
+{
+    ui->textEdit_2->clear();
+    ui->textEdit_2->setText(info);
+}
+
+
+//listview--------------------------------------------------------------------------------------------------------------
+void MainWindow::addListItem(QString text,int pm_num)
+{
+    QListWidgetItem* lwi=new QListWidgetItem();
+    lwi->setText(text);
+    lwi->setData(1,pm_num);
+    ui->listWidget_2->addItem(lwi);
+    ui->listWidget_2->setCurrentItem(lwi);
+}
+
+void MainWindow::removeListItem(int row)
+{
+    ui->listWidget_2->takeItem(row);
+    setCurrentImage(-2);
 }
 
 
@@ -98,18 +156,14 @@ void MainWindow::on_actionOpen_triggered()
         auto info = new QFileInfo(imagePath);
 
         //read image
+        QPixmap pixmap_mainshow;
         pixmap_mainshow.load(info->filePath());
-        RModel::getInstance()->mat_org=RUtils::QPixmapToCvMat(pixmap_mainshow);
-        RModel::getInstance()->mat_result=RModel::getInstance()->mat_org.clone();
-
-        //show image
-        scene_mainshow.clear();
-        scene_mainshow.addPixmap(pixmap_mainshow);
-        ui->graphicsView->setScene(&scene_mainshow);
-        ui->graphicsView->show();
 
 
-        this->setWindowTitle(info->fileName() + " - ImageQt");
+        //load Data
+        int cur_pm_num=RModel::getInstance()->addImage(pixmap_mainshow);
+        addListItem(info->fileName(),cur_pm_num);
+        setCurrentImage(cur_pm_num,info->fileName());
     }
 
 }
@@ -127,12 +181,14 @@ void MainWindow::on_actionZoom_3_triggered()
 
 void MainWindow::on_actionRGB2Gray_triggered()
 {
-    auto & cur_result=RModel::getInstance()->mat_result;
+    Mat cur_result=RModel::getInstance()->getCurrentMatShow();
     RAlgorithm::RGB2Gray(cur_result,cur_result);
-    this->pixmap_mainshow=RUtils::cvMatToQPixmap(cur_result);
-    scene_mainshow.clear();
-    scene_mainshow.addPixmap(pixmap_mainshow);
-    scene_mainshow.update();
+    RModel::getInstance()->setCurrentMatShow(cur_result);
+
+    QPixmap pm=RUtils::cvMatToQPixmap(cur_result);
+    RModel::getInstance()->setCurrentPixmap(pm);
+
+    setCurrentImage(-1);
 }
 
 void MainWindow::on_actionSave_As_triggered()
@@ -151,22 +207,19 @@ void MainWindow::on_actionSave_As_triggered()
 
     if (!imagePath.isEmpty())
     {
-        imwrite(imagePath.toStdString(),RModel::getInstance()->mat_result);
+        imwrite(imagePath.toStdString(),RModel::getInstance()->getCurrentMatShow());
     }
 }
 
 void MainWindow::on_actionReset_triggered()
 {
-    RModel::getInstance()->mat_result=RModel::getInstance()->mat_org.clone();
-    this->pixmap_mainshow=RUtils::cvMatToQPixmap(RModel::getInstance()->mat_result);
-    scene_mainshow.clear();
-    scene_mainshow.addPixmap(pixmap_mainshow);
-    scene_mainshow.update();
-}
+    Mat mo=RModel::getInstance()->getCurrentMatOrg().clone();
+    RModel::getInstance()->setCurrentMatShow(mo);
 
-void MainWindow::on_actionTools_Bar_triggered()
-{
+    QPixmap pm=RUtils::cvMatToQPixmap(mo);
+    RModel::getInstance()->setCurrentPixmap(pm);
 
+    setCurrentImage();
 }
 
 void MainWindow::on_actionTools_Bar_toggled(bool arg1)
@@ -178,23 +231,40 @@ void MainWindow::on_actionThreshold_triggered()
 {
 
     RDialog_threshold rdt;
-    ui->checkBox->setChecked(true);
     int status=rdt.exec();
-    if(status==true)
+    setCurrentImage();
+}
+
+
+void MainWindow::on_listWidget_2_itemDoubleClicked(QListWidgetItem *item)
+{
+    int num=item->data(1).toInt();
+    QString tilte=item->text();
+    setCurrentImage(num,tilte);
+}
+
+void MainWindow::on_listWidget_2_customContextMenuRequested(const QPoint &pos)
+{
+    if(ui->listWidget_2->count()<=0)
     {
-        ui->checkBox->setChecked(true);
-    }else
-    {
-        ui->checkBox->setChecked(false);
+        return;
     }
+    list_m_contextMenu->exec(QCursor::pos());
 }
 
-void MainWindow::on_actionOverlayer_toggled(bool arg1)
+void MainWindow::on_actionRemove_Image_triggered()
 {
-    showOverlayer(arg1);
+    QListWidgetItem* ci=ui->listWidget_2->currentItem();
+    int index=ci->data(1).toInt();
+    RModel::getInstance()->removeImage(index);
+
+    int cr=ui->listWidget_2->currentRow();
+    removeListItem(cr);
 }
 
-void MainWindow::on_checkBox_stateChanged(int arg1)
+void MainWindow::on_actionRename_triggered()
 {
-    ui->actionOverlayer->setChecked(arg1);
+    QListWidgetItem* ci=ui->listWidget_2->currentItem();
+    ci->setFlags(ci->flags() | Qt::ItemIsEditable);
+
 }

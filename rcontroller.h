@@ -24,9 +24,12 @@ public:
         }
         return ins;
     }
+
+
+
     static void threshold_window(MainWindow* mw,int t1,int t2)
     {
-        Mat & cr=RModel::getInstance()->mat_result;
+        Mat cr=RModel::getInstance()->getCurrentMatShow();
         Mat dst;
         if(cr.channels()!=1)
         {
@@ -34,14 +37,23 @@ public:
             return;
         }
 
-        RAlgorithm::threshold_range(cr,dst,t1,t2);
+        Mat mat_overlayer;
+        RAlgorithm::threshold_range(cr,dst,mat_overlayer,t1,t2);//threshold overlayer mat
+
+        RModel::getInstance()->setMatOverlayer(mat_overlayer);
+
         QPixmap qp=RUtils::cvMatToQPixmap(dst);
-        mw->setOverlayer(qp);
+        RModel::getInstance()->setOverlayer(qp);
         mw->showOverlayer(true);
     }
+
+
+
+
     static QPixmap getHistogramPixmap()
     {
-        auto his=RAlgorithm::getHistogram(RModel::getInstance()->mat_result);
+        Mat cm=RModel::getInstance()->getCurrentMatShow();
+        auto his=RAlgorithm::getHistogram(cm);
         int his_max=*(max_element(his.begin(),his.end()));
 
         QPixmap pix(260,151);
@@ -56,6 +68,20 @@ public:
             pp.drawLine(i,150,i,150-((his[i]+0.0)/his_max)*150);
         }
         return pix;
+    }
+
+
+
+
+    static void  genImageInfo()
+    {
+        Mat ci=RModel::getInstance()->getCurrentMatShow();
+        int channels=ci.channels();
+        int r=ci.rows;
+        int c=ci.cols;
+        QString qs;
+        qs.sprintf("Size:%d × %d\nChannel: %d",r,c,channels);
+        MainWindow::getInstance()->setInfo(qs);
     }
 
 };

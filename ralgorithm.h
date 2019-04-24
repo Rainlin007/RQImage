@@ -20,7 +20,7 @@ public:
        }
        cvtColor(mat_1,mat_2,COLOR_RGB2GRAY);
    }
-   static void threshold_range(Mat& src,Mat& dst,int t1,int t2)
+   static void threshold_range(Mat& src,Mat& dst_show,Mat& dst_threshold,int t1,int t2)
    {
         if(src.channels()!=1)
         {
@@ -29,6 +29,9 @@ public:
         int c=src.cols;
         int r=src.rows;
         Mat dst_t=Mat::zeros(r,c,CV_8UC4);
+        Mat dst_t2=Mat::zeros(r,c,CV_8UC1);
+
+
 
         for(int i=0;i<r;i++)
         {
@@ -37,13 +40,16 @@ public:
                 if(src.at<uchar>(i,j)>=t1&&src.at<uchar>(i,j)<=t2)
                 {
                     dst_t.at<Vec4b>(i,j)=Vec4b(0,0,255,255);
+                    dst_t2.at<uchar>(i,j)=255;
                 }
                 else {
                     dst_t.at<Vec4b>(i,j)=Vec4b(0,0,0,0);
+                    dst_t2.at<uchar>(i,j)=0;
                 }
             }
         }
-        dst=dst_t;
+        dst_show=dst_t;
+        dst_threshold=dst_t2;
    }
    static vector<int> getHistogram(Mat &src)
    {

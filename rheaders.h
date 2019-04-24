@@ -16,8 +16,8 @@
 
 
 
-
-
+//std headers--------------------------------------------------------
+#include<algorithm>
 
 
 #endif // RHEADERS_H

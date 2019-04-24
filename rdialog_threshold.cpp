@@ -19,6 +19,11 @@ RDialog_threshold::~RDialog_threshold()
 
 void RDialog_threshold::on_pushButton_clicked()
 {
+
+    Mat ol=RModel::getInstance()->getMatOverlayer();
+    RModel::getInstance()->setCurrentMatShow(ol);
+    QPixmap qp=RUtils::cvMatToQPixmap(ol);
+    RModel::getInstance()->setCurrentPixmap(qp);
     this->accept();
 }
 
@@ -60,4 +65,9 @@ void RDialog_threshold::on_spinBox_2_valueChanged(int arg1)
         ui->horizontalSlider->setValue(threshold_1);
     }
     RController::threshold_window(MainWindow::getInstance(),threshold_1,threshold_2);
+}
+
+void RDialog_threshold::on_pushButton_3_clicked()
+{
+
 }
