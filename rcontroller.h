@@ -27,7 +27,7 @@ public:
 
 
 
-    static void threshold_window(MainWindow* mw,int t1,int t2)
+    static void threshold_window(int t1,int t2)
     {
         Mat cr=RModel::getInstance()->getCurrentMatShow();
         Mat dst;
@@ -41,10 +41,9 @@ public:
         RAlgorithm::threshold_range(cr,dst,mat_overlayer,t1,t2);//threshold overlayer mat
 
         RModel::getInstance()->setMatOverlayer(mat_overlayer);
-
         QPixmap qp=RUtils::cvMatToQPixmap(dst);
         RModel::getInstance()->setOverlayer(qp);
-        mw->showOverlayer(true);
+        MainWindow::getInstance()->showOverlayer(true);
     }
 
 
@@ -70,18 +69,20 @@ public:
         return pix;
     }
 
-
-
-
     static void  genImageInfo()
     {
         Mat ci=RModel::getInstance()->getCurrentMatShow();
         int channels=ci.channels();
         int r=ci.rows;
         int c=ci.cols;
+        const char* isB="NO";
+        if(RAlgorithm::isBinary(ci)==true)
+        {
+            isB="YES";
+        }
         QString qs;
-        qs.sprintf("Size:%d × %d\nChannel: %d",r,c,channels);
-        MainWindow::getInstance()->setInfo(qs);
+        qs.sprintf("Size:%d × %d\nChannel: %d\nBinary:%s",r,c,channels,isB);
+        RModel::getInstance()->setCurrentInfoString(qs);
     }
 
 };

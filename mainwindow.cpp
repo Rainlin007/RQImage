@@ -7,6 +7,8 @@
 #include"rutils.h"
 #include"ralgorithm.h"
 #include"rdialog_threshold.h"
+#include"rdialog_rename.h"
+#include"rdialog_morphology.h"
 MainWindow* MainWindow::ins=NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -43,8 +45,11 @@ void MainWindow::initUI()
     connect(ui->toolButton_7,SIGNAL(clicked()),ui->actionRGB2Gray,SLOT(trigger()));
     connect(ui->toolButton,SIGNAL(clicked()),ui->actionReset,SLOT(trigger()));
     connect(ui->toolButton_6,SIGNAL(clicked()),ui->actionThreshold,SLOT(trigger()));
+    connect(ui->toolButton_2,SIGNAL(clicked()),ui->actionAddImage,SLOT(trigger()));
 
-
+    connect(ui->toolButton_4,SIGNAL(clicked()),ui->actionSave_As,SLOT(trigger()));
+    connect(ui->toolButton_3,SIGNAL(clicked()),ui->actionConnected_Domin_Lable,SLOT(trigger()));
+    connect(ui->toolButton_8,SIGNAL(clicked()),ui->actionmorphology_process,SLOT(trigger()));
 
     //listView
     ui->listWidget_2->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -74,40 +79,47 @@ void MainWindow::showOverlayer(bool status)
     scene_mainshow.update();
 }
 
-void MainWindow::setCurrentImage(int pm_num,QString text)
+void MainWindow::updateCurrentImage()
 {
-    if(pm_num==-2)//called when image removed
+    if(RModel::getInstance()->cur_num==-1)//called when image removed
     {
         scene_mainshow.clear();
-        RModel::getInstance()->cur_num=-2;
         scene_mainshow.setSceneRect(QRectF(0,0,0,0));
-        RController::genImageInfo();
+        ui->textEdit_2->setText("");
+        ui->textEdit_3->setText("");
+        return;
+    }
+    RController::genImageInfo();
+    scene_mainshow.clear();
+    QPixmap cp=RModel::getInstance()->getCurrentPixmap();
+    scene_mainshow.setSceneRect(QRectF(0,0,cp.width(),cp.height()));
+    scene_mainshow.addPixmap(cp);
+    ui->textEdit_2->setText(RModel::getInstance()->getCurrentInfoString());
+    ui->textEdit_3->setText(RModel::getInstance()->getCurrentResultString());
+
+}
+
+void  MainWindow::switchCurrentImage(int pm_num)
+{
+    if(pm_num==-1)//called when image removed
+    {
+        scene_mainshow.clear();
+        RModel::getInstance()->cur_num=-1;
+        scene_mainshow.setSceneRect(QRectF(0,0,0,0));
+        ui->textEdit_2->setText("");
+        ui->textEdit_3->setText("");
         return;
     }
 
-
-    if(pm_num!=-1)//current image
-    {
-        RModel::getInstance()->cur_num=pm_num;
-    }
+    RModel::getInstance()->cur_num=pm_num;
+    RController::genImageInfo();
     scene_mainshow.clear();
     QPixmap cp=RModel::getInstance()->getCurrentPixmap();
-
     scene_mainshow.setSceneRect(QRectF(0,0,cp.width(),cp.height()));
     scene_mainshow.addPixmap(cp);
-
-    RController::genImageInfo();
-    if(text!="")
-    {
-        this->setWindowTitle(text + " - RQImage");
-    }
+    ui->textEdit_2->setText(RModel::getInstance()->getCurrentInfoString());
+    ui->textEdit_3->setText(RModel::getInstance()->getCurrentResultString());
 }
-void MainWindow::setInfo(QString info)
-{
-    ui->textEdit_2->clear();
-    ui->textEdit_2->setText(info);
-}
-
 
 //listview--------------------------------------------------------------------------------------------------------------
 void MainWindow::addListItem(QString text,int pm_num)
@@ -119,11 +131,6 @@ void MainWindow::addListItem(QString text,int pm_num)
     ui->listWidget_2->setCurrentItem(lwi);
 }
 
-void MainWindow::removeListItem(int row)
-{
-    ui->listWidget_2->takeItem(row);
-    setCurrentImage(-2);
-}
 
 
 
@@ -154,16 +161,16 @@ void MainWindow::on_actionOpen_triggered()
 
         // upload image
         auto info = new QFileInfo(imagePath);
+        Mat mat=imread(info->filePath().toStdString(),IMREAD_UNCHANGED);
 
         //read image
-        QPixmap pixmap_mainshow;
-        pixmap_mainshow.load(info->filePath());
-
+        //QPixmap pixmap_mainshow;
+        //pixmap_mainshow.load(info->filePath());
 
         //load Data
-        int cur_pm_num=RModel::getInstance()->addImage(pixmap_mainshow);
+        int cur_pm_num=RModel::getInstance()->addImage(mat);
         addListItem(info->fileName(),cur_pm_num);
-        setCurrentImage(cur_pm_num,info->fileName());
+        switchCurrentImage(cur_pm_num);
     }
 
 }
@@ -188,7 +195,7 @@ void MainWindow::on_actionRGB2Gray_triggered()
     QPixmap pm=RUtils::cvMatToQPixmap(cur_result);
     RModel::getInstance()->setCurrentPixmap(pm);
 
-    setCurrentImage(-1);
+    updateCurrentImage();
 }
 
 void MainWindow::on_actionSave_As_triggered()
@@ -219,7 +226,7 @@ void MainWindow::on_actionReset_triggered()
     QPixmap pm=RUtils::cvMatToQPixmap(mo);
     RModel::getInstance()->setCurrentPixmap(pm);
 
-    setCurrentImage();
+    updateCurrentImage();
 }
 
 void MainWindow::on_actionTools_Bar_toggled(bool arg1)
@@ -229,18 +236,24 @@ void MainWindow::on_actionTools_Bar_toggled(bool arg1)
 
 void MainWindow::on_actionThreshold_triggered()
 {
+    Mat cr=RModel::getInstance()->getCurrentMatShow();
+    if(cr.channels()!=1)
+    {
+        QMessageBox::warning(NULL,"Warning","Ensure Current Image Gray!");
+        return;
+    }
 
     RDialog_threshold rdt;
-    int status=rdt.exec();
-    setCurrentImage();
+    rdt.exec();
+
+    updateCurrentImage();
 }
 
 
 void MainWindow::on_listWidget_2_itemDoubleClicked(QListWidgetItem *item)
 {
     int num=item->data(1).toInt();
-    QString tilte=item->text();
-    setCurrentImage(num,tilte);
+    switchCurrentImage(num);
 }
 
 void MainWindow::on_listWidget_2_customContextMenuRequested(const QPoint &pos)
@@ -257,14 +270,72 @@ void MainWindow::on_actionRemove_Image_triggered()
     QListWidgetItem* ci=ui->listWidget_2->currentItem();
     int index=ci->data(1).toInt();
     RModel::getInstance()->removeImage(index);
+    int row=ui->listWidget_2->currentRow();
+    ui->listWidget_2->takeItem(row);
 
-    int cr=ui->listWidget_2->currentRow();
-    removeListItem(cr);
+    switchCurrentImage(-1);
 }
 
 void MainWindow::on_actionRename_triggered()
 {
     QListWidgetItem* ci=ui->listWidget_2->currentItem();
-    ci->setFlags(ci->flags() | Qt::ItemIsEditable);
+    RDialog_rename rrn;
+    rrn.setValue(ci->text());
+    if(rrn.exec()==true)
+    {
+        ci->setText(rrn.getValue());
+    }
+    
+}
+
+void MainWindow::on_actionAddImage_triggered()
+{
+    Mat mat=RModel::getInstance()->getCurrentMatShow();
+    QString str;
+    int cur_pm_num=RModel::getInstance()->addImage(mat);
+    str.sprintf("Image-%d",cur_pm_num);
+    addListItem(str,cur_pm_num);
+
+    switchCurrentImage(cur_pm_num);
+}
+
+
+void MainWindow::on_actionConnected_Domin_Lable_triggered()
+{
+    Mat t=RModel::getInstance()->getCurrentMatShow();
+    if(RAlgorithm::isBinary(t)== false)
+    {
+        QMessageBox::warning(NULL,"Warning","Connected Domin Lable Need Binary Image!");
+        return;
+    }
+
+    Mat src=RModel::getInstance()->getCurrentMatShow();
+    Mat dst,dst_show;
+    int num=0;
+    RAlgorithm::getConnectedDomainLable(src,dst,dst_show,num);
+    QString str;
+    str.sprintf("Domin Num:%d",num);
+
+    RModel::getInstance()->setCurrentImage(dst_show);
+    RModel::getInstance()->setCurrentResultString(str);
+
+    updateCurrentImage();
+}
+
+
+void MainWindow::on_actionmorphology_process_triggered()
+{
+    Mat t=RModel::getInstance()->getCurrentMatShow();
+    if(RAlgorithm::isBinary(t)==false)
+    {
+        QMessageBox::warning(NULL,"Warning","Current image should be binary image!");
+        return;
+    }
+    RDialog_morphology rdm;
+    if(rdm.exec()==true)
+    {
+        RModel::getInstance()->setCurrentImage(rdm.result);
+        updateCurrentImage();
+    }
 
 }

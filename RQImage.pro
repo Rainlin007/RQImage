@@ -45,7 +45,9 @@ SOURCES += \
     rview.cpp \
     ralgorithm.cpp \
     rdialog_threshold.cpp \
-    rcontroller.cpp
+    rcontroller.cpp \
+    rdialog_rename.cpp \
+    rdialog_morphology.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -55,12 +57,16 @@ HEADERS += \
     rview.h \
     ralgorithm.h \
     rdialog_threshold.h \
-    rcontroller.h
+    rcontroller.h \
+    rdialog_rename.h \
+    rdialog_morphology.h
 
 
 FORMS += \
         mainwindow.ui \
-    rdialog_threshold.ui
+    rdialog_threshold.ui \
+    rdialog_rename.ui \
+    rdialog_morphology.ui
 
 
 

@@ -41,7 +41,7 @@ private slots:
 
     void on_spinBox_2_valueChanged(int arg1);
 
-    void on_pushButton_3_clicked();
+    void on_checkBox_stateChanged(int arg1);
 
 private:
     Ui::RDialog_threshold *ui;

@@ -16,10 +16,6 @@ public:
 
 
 public:
-    void menuInit()
-    {
-
-    }
 
 
 };

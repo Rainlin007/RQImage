@@ -26,7 +26,8 @@ public:
     void showOverlayer(bool status);
 
     void setInfo(QString);
-    void setCurrentImage(int pm_num=-1,QString text="");
+    void updateCurrentImage();
+    void switchCurrentImage(int pm_num);
 
 
 
@@ -65,6 +66,12 @@ private slots:
     void on_actionRemove_Image_triggered();
 
     void on_actionRename_triggered();
+
+    void on_actionAddImage_triggered();
+
+    void on_actionConnected_Domin_Lable_triggered();
+
+    void on_actionmorphology_process_triggered();
 
 private:
     Ui::MainWindow *ui;

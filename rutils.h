@@ -104,6 +104,7 @@ public:
 
         // 8-bit, 1 channel
         case QImage::Format_Indexed8:
+        case QImage::Format_Grayscale8:
         {
             cv::Mat  mat( inImage.height(), inImage.width(),
                           CV_8UC1,

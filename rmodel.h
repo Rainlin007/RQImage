@@ -11,17 +11,19 @@ private:
     static RModel* instance;
 
 public:
-    std::map<int,Mat> mat_map_org;
-    std::map<int,Mat> mat_map_show;
+    std::map<int,Mat> mat_map_org;//original Mat
+    std::map<int,Mat> mat_map_show;//current show Mat
 
-    std::map<int,QPixmap> pixmap_map_show;
+    std::map<int,QPixmap> pixmap_map_show;//current show Pixmap
+
+    std::map<int,QString> info_string;
+    std::map<int,QString> result_string;
 
 
     QPixmap pixmap_overlayer;//overlayer image
     Mat mat_overlayer;//overlayer mat
 
-
-    int cur_num=0;
+    int cur_num=-1;
     int cur_max_num=0;
 public:
     RModel()
@@ -38,20 +40,39 @@ public:
         return instance;
     }
 
-    int addImage(QPixmap& pixmap)
+//    int addImage(QPixmap& pixmap)
+//    {
+//        int d=pixmap.depth();
+//        pixmap_map_show[cur_max_num]=pixmap.copy();
+//        mat_map_org[cur_max_num]=RUtils::QPixmapToCvMat(pixmap_map_show[cur_max_num]);
+//        mat_map_show[cur_max_num]=mat_map_org[cur_max_num].clone();
+//        return cur_max_num++;
+//    }
+
+
+    int addImage(Mat& mat)
     {
-        pixmap_map_show[cur_max_num]=pixmap.copy();
-        mat_map_org[cur_max_num]=RUtils::QPixmapToCvMat(pixmap_map_show[cur_max_num]);
+        mat_map_org[cur_max_num]=mat.clone();
         mat_map_show[cur_max_num]=mat_map_org[cur_max_num].clone();
+        QPixmap qp=RUtils::cvMatToQPixmap(mat);
+        pixmap_map_show[cur_max_num]=qp.copy();
         return cur_max_num++;
     }
+
     void removeImage(int id)
     {
         pixmap_map_show[id]=QPixmap();
         mat_map_org[id]=Mat();
         mat_map_show[id]=Mat();
+        info_string[id]="";
     }
 
+    void setCurrentImage(Mat mat)
+    {
+        mat_map_show[cur_num]=mat.clone();
+        QPixmap qp=RUtils::cvMatToQPixmap(mat);
+        pixmap_map_show[cur_num]=qp.copy();
+    }
 
 
 
@@ -107,7 +128,23 @@ public:
     }
 
 
+    QString getCurrentInfoString()
+    {
+        return info_string[cur_num];
+    }
+    void setCurrentInfoString(QString t)
+    {
+        info_string[cur_num]=t;
+    }
 
+    QString getCurrentResultString()
+    {
+        return result_string[cur_num];
+    }
+    void setCurrentResultString(QString t)
+    {
+        result_string[cur_num]=t;
+    }
 
 };
 

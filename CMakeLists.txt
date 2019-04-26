@@ -27,7 +27,8 @@ add_executable(PROJECT_NAME main.cpp
         rdialog_threshold.cpp
         rmodel.cpp
         rutils.cpp
-        rview.cpp)
+        rview.cpp
+        rdialog_rename.cpp)
 
 target_link_libraries(PROJECT_NAME Qt5::Core)
 target_link_libraries(PROJECT_NAME Qt5::Widgets)

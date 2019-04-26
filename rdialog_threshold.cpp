@@ -21,9 +21,7 @@ void RDialog_threshold::on_pushButton_clicked()
 {
 
     Mat ol=RModel::getInstance()->getMatOverlayer();
-    RModel::getInstance()->setCurrentMatShow(ol);
-    QPixmap qp=RUtils::cvMatToQPixmap(ol);
-    RModel::getInstance()->setCurrentPixmap(qp);
+    RModel::getInstance()->setCurrentImage(ol);
     this->accept();
 }
 
@@ -52,7 +50,7 @@ void RDialog_threshold::on_spinBox_valueChanged(int arg1)
         ui->horizontalSlider_2->setValue(threshold_1);
     }
 
-    RController::threshold_window(MainWindow::getInstance(),threshold_1,threshold_2);
+    RController::threshold_window(threshold_1,threshold_2);
 }
 
 void RDialog_threshold::on_spinBox_2_valueChanged(int arg1)
@@ -64,10 +62,10 @@ void RDialog_threshold::on_spinBox_2_valueChanged(int arg1)
         ui->spinBox->setValue(threshold_1);
         ui->horizontalSlider->setValue(threshold_1);
     }
-    RController::threshold_window(MainWindow::getInstance(),threshold_1,threshold_2);
+    RController::threshold_window(threshold_1,threshold_2);
 }
 
-void RDialog_threshold::on_pushButton_3_clicked()
+void RDialog_threshold::on_checkBox_stateChanged(int arg1)
 {
-
+    MainWindow::getInstance()->showOverlayer(arg1);
 }
