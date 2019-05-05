@@ -9,6 +9,8 @@
 #include"rdialog_threshold.h"
 #include"rdialog_rename.h"
 #include"rdialog_morphology.h"
+#include"rdialog_edgedetection.h"
+#include"rdialog_threshold_color.h"
 MainWindow* MainWindow::ins=NULL;
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -50,7 +52,9 @@ void MainWindow::initUI()
     connect(ui->toolButton_4,SIGNAL(clicked()),ui->actionSave_As,SLOT(trigger()));
     connect(ui->toolButton_3,SIGNAL(clicked()),ui->actionConnected_Domin_Lable,SLOT(trigger()));
     connect(ui->toolButton_8,SIGNAL(clicked()),ui->actionmorphology_process,SLOT(trigger()));
-
+    connect(ui->toolButton_11,SIGNAL(clicked()),ui->actionDestoryAllCvWindows,SLOT(trigger()));
+    connect(ui->toolButton_12,SIGNAL(clicked()),ui->actionEdge_Detection,SLOT(trigger()));
+    connect(ui->toolButton_13,SIGNAL(clicked()),ui->actionThreshold_Color,SLOT(trigger()));
     //listView
     ui->listWidget_2->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -315,10 +319,10 @@ void MainWindow::on_actionConnected_Domin_Lable_triggered()
     RAlgorithm::getConnectedDomainLable(src,dst,dst_show,num);
     QString str;
     str.sprintf("Domin Num:%d",num);
+    imshow("Connected Domin Lable",dst_show);
+    //RModel::getInstance()->setCurrentImage(dst_show);
 
-    RModel::getInstance()->setCurrentImage(dst_show);
     RModel::getInstance()->setCurrentResultString(str);
-
     updateCurrentImage();
 }
 
@@ -337,5 +341,35 @@ void MainWindow::on_actionmorphology_process_triggered()
         RModel::getInstance()->setCurrentImage(rdm.result);
         updateCurrentImage();
     }
+
+}
+
+void MainWindow::on_actionDestoryAllCvWindows_triggered()
+{
+    destroyAllWindows();
+}
+
+void MainWindow::on_actionEdge_Detection_triggered()
+{
+    RDialog_EdgeDetection red;
+    red.exec();
+
+}
+
+void MainWindow::on_actionThreshold_Color_triggered()
+{
+    Mat cr=RModel::getInstance()->getCurrentMatShow();
+    if(cr.channels()!=3)
+    {
+        QMessageBox::warning(NULL,"Warning","Ensure Current Image Color!");
+        return;
+    }
+
+    RDialog_threshold_color rtc;
+    rtc.exec();
+
+    updateCurrentImage();
+
+
 
 }

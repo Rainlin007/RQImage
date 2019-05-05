@@ -73,6 +73,12 @@ private slots:
 
     void on_actionmorphology_process_triggered();
 
+    void on_actionDestoryAllCvWindows_triggered();
+
+    void on_actionEdge_Detection_triggered();
+
+    void on_actionThreshold_Color_triggered();
+
 private:
     Ui::MainWindow *ui;
 

@@ -45,7 +45,24 @@ public:
         RModel::getInstance()->setOverlayer(qp);
         MainWindow::getInstance()->showOverlayer(true);
     }
+    static void threshold_color_window(int thd[3][2])
+    {
+        Mat cr=RModel::getInstance()->getCurrentMatShow();
+        Mat dst;
+        if(cr.channels()!=3)
+        {
+            QMessageBox::warning(NULL,"Warning","Ensure Current Image Color");
+            return;
+        }
 
+        Mat mat_overlayer;
+        RAlgorithm::threshold_color_range(cr,dst,mat_overlayer,thd);
+
+        RModel::getInstance()->setMatOverlayer(mat_overlayer);
+        QPixmap qp=RUtils::cvMatToQPixmap(dst);
+        RModel::getInstance()->setOverlayer(qp);
+        MainWindow::getInstance()->showOverlayer(true);
+    }
 
 
 
@@ -67,6 +84,41 @@ public:
             pp.drawLine(i,150,i,150-((his[i]+0.0)/his_max)*150);
         }
         return pix;
+    }
+
+    static vector<QPixmap> getHistogramPixmap_color()
+    {
+        vector<QPixmap> result;
+
+        Mat cm=RModel::getInstance()->getCurrentMatShow();
+        auto hiss=RAlgorithm::getHistogram_color(cm);
+        int i=0;
+        Qt::red;
+        vector<Qt::GlobalColor> cs;
+        cs.push_back(Qt::blue);
+        cs.push_back(Qt::green);
+        cs.push_back(Qt::red);
+
+        for(vector<int> his:hiss)
+        {
+            int his_max=*(max_element(his.begin(),his.end()));
+
+            QPixmap pix(260,151);
+            pix.fill(Qt::transparent);
+            QPainter pp(&pix);//新建QPainter类，在pix（画布）上进行绘图
+            QBrush qb(cs[i]);
+            QPen qp(cs[i]);
+            pp.setBrush(qb);
+            pp.setPen(qp);
+            for(int i=0;i<256;i++)
+            {
+                pp.drawLine(i,150,i,150-((his[i]+0.0)/his_max)*150);
+            }
+            result.push_back(pix);
+            i++;
+        }
+
+        return result;
     }
 
     static void  genImageInfo()

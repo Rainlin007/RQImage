@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -132,6 +132,13 @@
            <string>Zoom</string>
           </property>
           <layout class="QGridLayout" name="gridLayout">
+           <item row="1" column="0">
+            <widget class="QToolButton" name="toolButton_10">
+             <property name="text">
+              <string>Zoom-</string>
+             </property>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QToolButton" name="toolButton_9">
              <property name="text">
@@ -139,10 +146,19 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QToolButton" name="toolButton_10">
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_5">
+          <property name="title">
+           <string>OpenCV Windows</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QToolButton" name="toolButton_11">
              <property name="text">
-              <string>Zoom-</string>
+              <string>Close All OpenCV Windows </string>
              </property>
             </widget>
            </item>
@@ -181,6 +197,13 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="toolButton_13">
+             <property name="text">
+              <string>Threshold</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -194,6 +217,13 @@
             <widget class="QToolButton" name="toolButton_6">
              <property name="text">
               <string>Threshold</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QToolButton" name="toolButton_12">
+             <property name="text">
+              <string>Edge Detection</string>
              </property>
             </widget>
            </item>
@@ -471,6 +501,21 @@
   <action name="actionmorphology_process">
    <property name="text">
     <string>morphology process</string>
+   </property>
+  </action>
+  <action name="actionDestoryAllCvWindows">
+   <property name="text">
+    <string>DestoryAllCvWindows</string>
+   </property>
+  </action>
+  <action name="actionEdge_Detection">
+   <property name="text">
+    <string>Edge Detection</string>
+   </property>
+  </action>
+  <action name="actionThreshold_Color">
+   <property name="text">
+    <string>Threshold Color</string>
    </property>
   </action>
  </widget>

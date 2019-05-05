@@ -29,17 +29,6 @@ void RDialog_threshold::on_pushButton_2_clicked()
 {
     this->reject();
 };
-
-void RDialog_threshold::on_horizontalSlider_sliderMoved(int position)
-{
-
-}
-
-void RDialog_threshold::on_horizontalSlider_2_sliderMoved(int position)
-{
-
-}
-
 void RDialog_threshold::on_spinBox_valueChanged(int arg1)
 {
     threshold_1=arg1;

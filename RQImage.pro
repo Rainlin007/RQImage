@@ -47,7 +47,9 @@ SOURCES += \
     rdialog_threshold.cpp \
     rcontroller.cpp \
     rdialog_rename.cpp \
-    rdialog_morphology.cpp
+    rdialog_morphology.cpp \
+    rdialog_edgedetection.cpp \
+    rdialog_threshold_color.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -59,14 +61,18 @@ HEADERS += \
     rdialog_threshold.h \
     rcontroller.h \
     rdialog_rename.h \
-    rdialog_morphology.h
+    rdialog_morphology.h \
+    rdialog_edgedetection.h \
+    rdialog_threshold_color.h
 
 
 FORMS += \
         mainwindow.ui \
     rdialog_threshold.ui \
     rdialog_rename.ui \
-    rdialog_morphology.ui
+    rdialog_morphology.ui \
+    rdialog_edgedetection.ui \
+    rdialog_threshold_color.ui
 
 
 
