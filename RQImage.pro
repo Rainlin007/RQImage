@@ -26,45 +26,46 @@ DEFINES += QT_DEPRECATED_WARNINGS
 INCLUDEPATH += /usr/local/include
 INCLUDEPATH += /usr/local/include/opencv4
 INCLUDEPATH += /usr/local/include/opencv4/opencv2
+INCLUDEPATH += ./header
 
 CONFIG += c++11
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    rmodel.cpp \
-    rutils.cpp \
-    rview.cpp \
-    ralgorithm.cpp \
-    rdialog_threshold.cpp \
-    rcontroller.cpp \
-    rdialog_rename.cpp \
-    rdialog_morphology.cpp \
-    rdialog_edgedetection.cpp \
-    rdialog_threshold_color.cpp
+        cpp/main.cpp \
+        cpp/mainwindow.cpp \
+    cpp/rmodel.cpp \
+    cpp/rutils.cpp \
+    cpp/rview.cpp \
+    cpp/ralgorithm.cpp \
+    cpp/rdialog_threshold.cpp \
+    cpp/rcontroller.cpp \
+    cpp/rdialog_rename.cpp \
+    cpp/rdialog_morphology.cpp \
+    cpp/rdialog_edgedetection.cpp \
+    cpp/rdialog_threshold_color.cpp
 
 HEADERS += \
-        mainwindow.h \
-    rmodel.h \
-    rutils.h \
-    rheaders.h \
-    rview.h \
-    ralgorithm.h \
-    rdialog_threshold.h \
-    rcontroller.h \
-    rdialog_rename.h \
-    rdialog_morphology.h \
-    rdialog_edgedetection.h \
-    rdialog_threshold_color.h
+        header/mainwindow.h \
+    header/rmodel.h \
+    header/rutils.h \
+    header/rheaders.h \
+    header/rview.h \
+    header/ralgorithm.h \
+    header/rdialog_threshold.h \
+    header/rcontroller.h \
+    header/rdialog_rename.h \
+    header/rdialog_morphology.h \
+    header/rdialog_edgedetection.h \
+    header/rdialog_threshold_color.h
 
 
 FORMS += \
-        mainwindow.ui \
-    rdialog_threshold.ui \
-    rdialog_rename.ui \
-    rdialog_morphology.ui \
-    rdialog_edgedetection.ui \
-    rdialog_threshold_color.ui
+        ui/mainwindow.ui \
+    ui/rdialog_threshold.ui \
+    ui/rdialog_rename.ui \
+    ui/rdialog_morphology.ui \
+    ui/rdialog_edgedetection.ui \
+    ui/rdialog_threshold_color.ui
 
 # OpenCV lib
 LIBS += -L/usr/local/Cellar/opencv/4.0.1/lib \

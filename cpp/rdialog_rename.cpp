@@ -1,9 +1,8 @@
 #include "rdialog_rename.h"
 #include "ui_rdialog_rename.h"
 
-RDialog_rename::RDialog_rename(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::RDialog_rename)
+RDialog_rename::RDialog_rename(QWidget *parent) : QDialog(parent),
+                                                  ui(new Ui::RDialog_rename)
 {
     ui->setupUi(this);
 }
@@ -15,12 +14,10 @@ RDialog_rename::~RDialog_rename()
 
 void RDialog_rename::on_buttonBox_accepted()
 {
-
 }
 
 void RDialog_rename::on_buttonBox_rejected()
 {
-
 }
 
 QString RDialog_rename::getValue()

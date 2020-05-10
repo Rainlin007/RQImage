@@ -25,7 +25,7 @@ public:
         return ins;
     }
 
-    static void threshold_window(int t1, int t2)
+    static void thresholdWindow(int t1, int t2)
     {
         Mat cr = RModel::getInstance()->getCurrentMatShow();
         Mat dst;
@@ -36,14 +36,14 @@ public:
         }
 
         Mat mat_overlayer;
-        RAlgorithm::threshold_range(cr, dst, mat_overlayer, t1, t2); //threshold overlayer mat
+        RAlgorithm::thresholdRange(cr, dst, mat_overlayer, t1, t2); //threshold overlayer mat
 
         RModel::getInstance()->setMatOverlayer(mat_overlayer);
         QPixmap qp = RUtils::cvMatToQPixmap(dst);
         RModel::getInstance()->setOverlayer(qp);
         MainWindow::getInstance()->showOverlayer(true);
     }
-    static void threshold_color_window(int thd[3][2])
+    static void thresholdColorWindow(int thd[3][2])
     {
         Mat cr = RModel::getInstance()->getCurrentMatShow();
         Mat dst;
@@ -54,7 +54,7 @@ public:
         }
 
         Mat mat_overlayer;
-        RAlgorithm::threshold_color_range(cr, dst, mat_overlayer, thd);
+        RAlgorithm::thresholdColorRange(cr, dst, mat_overlayer, thd);
 
         RModel::getInstance()->setMatOverlayer(mat_overlayer);
         QPixmap qp = RUtils::cvMatToQPixmap(dst);
@@ -87,7 +87,7 @@ public:
         vector<QPixmap> result;
 
         Mat cm = RModel::getInstance()->getCurrentMatShow();
-        auto hiss = RAlgorithm::getHistogram_color(cm);
+        auto hiss = RAlgorithm::getHistogramColor(cm);
         int i = 0;
         Qt::red;
         vector<Qt::GlobalColor> cs;

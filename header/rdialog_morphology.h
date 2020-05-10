@@ -2,8 +2,9 @@
 #define RDIALOG_MORPHOLOGY_H
 
 #include <QDialog>
-#include"rheaders.h"
-namespace Ui {
+#include "rheaders.h"
+namespace Ui
+{
 class RDialog_morphology;
 }
 

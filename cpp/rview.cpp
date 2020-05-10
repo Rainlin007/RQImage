@@ -2,5 +2,4 @@
 
 RView::RView()
 {
-
 }

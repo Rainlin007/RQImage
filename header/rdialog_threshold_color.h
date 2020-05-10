@@ -2,9 +2,10 @@
 #define RDIALOG_THRESHOLD_COLOR_H
 
 #include <QDialog>
-#include<QPainter>
-#include<rcontroller.h>
-namespace Ui {
+#include <QPainter>
+#include <rcontroller.h>
+namespace Ui
+{
 class RDialog_threshold_color;
 }
 
@@ -15,18 +16,18 @@ class RDialog_threshold_color : public QDialog
 public:
     explicit RDialog_threshold_color(QWidget *parent = nullptr);
     ~RDialog_threshold_color();
+
 protected:
     void paintEvent(QPaintEvent *event)
     {
         QPainter painter(this);
-        auto his=RController::getInstance()->getHistogramPixmap_color();
-        painter.drawPixmap(90,10,his[0]);
-        painter.drawPixmap(90,240,his[1]);
-        painter.drawPixmap(90,470,his[2]);
+        auto his = RController::getInstance()->getHistogramPixmap_color();
+        painter.drawPixmap(90, 10, his[0]);
+        painter.drawPixmap(90, 240, his[1]);
+        painter.drawPixmap(90, 470, his[2]);
     }
 
 private slots:
-
 
     void on_checkBox_stateChanged(int arg1);
 
@@ -48,7 +49,7 @@ private slots:
 
 private:
     Ui::RDialog_threshold_color *ui;
-    int threshold[3][2]={{0,0},{0,0},{0,0}};
+    int threshold[3][2] = {{0, 0}, {0, 0}, {0, 0}};
 };
 
 #endif // RDIALOG_THRESHOLD_COLOR_H

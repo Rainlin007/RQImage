@@ -40,7 +40,7 @@ public:
         }
         cvtColor(mat_1, mat_2, COLOR_RGB2GRAY);
     }
-    static void threshold_range(Mat &src, Mat &dst_show, Mat &dst_threshold, int t1, int t2)
+    static void thresholdRange(Mat &src, Mat &dst_show, Mat &dst_threshold, int t1, int t2)
     {
         if (src.channels() != 1)
         {
@@ -70,7 +70,7 @@ public:
         dst_show = dst_t;
         dst_threshold = dst_t2;
     }
-    static void threshold_color_range(Mat &src, Mat &dst_show, Mat &dst_threshold, int thd[3][2])
+    static void thresholdColorRange(Mat &src, Mat &dst_show, Mat &dst_threshold, int thd[3][2])
     {
         if (src.channels() != 3)
         {
@@ -118,7 +118,7 @@ public:
         return values;
     }
 
-    static vector<vector<int>> getHistogram_color(Mat &src)
+    static vector<vector<int>> getHistogramColor(Mat &src)
     {
         vector<vector<int>> values;
         values.push_back(vector<int>());

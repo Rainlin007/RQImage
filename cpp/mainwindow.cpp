@@ -25,11 +25,14 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-//Related Method----------------------------------------------------------------------------------------------------------
+/**
+ * Related Method
+ */
 MainWindow *MainWindow::getInstance()
 {
     return ins;
 }
+
 void MainWindow::initUI()
 {
     //make TabWidget left to right
@@ -121,7 +124,9 @@ void MainWindow::switchCurrentImage(int pm_num)
     ui->textEdit_3->setText(RModel::getInstance()->getCurrentResultString());
 }
 
-//listview--------------------------------------------------------------------------------------------------------------
+/** 
+ * listview
+ */
 void MainWindow::addListItem(QString text, int pm_num)
 {
     QListWidgetItem *lwi = new QListWidgetItem();
@@ -131,7 +136,9 @@ void MainWindow::addListItem(QString text, int pm_num)
     ui->listWidget_2->setCurrentItem(lwi);
 }
 
-//Slots------------------------------------------------------------------------------------------------------------------
+/**
+ * Slots
+ */
 void MainWindow::on_actionOpen_triggered()
 {
 

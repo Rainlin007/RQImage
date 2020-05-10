@@ -3,7 +3,8 @@
 
 #include <QDialog>
 
-namespace Ui {
+namespace Ui
+{
 class RDialog_rename;
 }
 
@@ -16,7 +17,6 @@ public:
     ~RDialog_rename();
     QString getValue();
     void setValue(QString t);
-
 
 private slots:
     void on_buttonBox_accepted();
