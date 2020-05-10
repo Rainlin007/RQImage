@@ -25,12 +25,12 @@ public:
     std::map<int, QPixmap> pixmap_map_show;
 
     /**
-     * @brief mat infomation string
+     * @brief orginal mat infomation string
      */
     std::map<int, QString> info_string;
 
     /**
-     * @brief orginal mat infomation
+     * @brief do image process result string
      */
     std::map<int, QString> result_string;
 
@@ -58,15 +58,6 @@ public:
         static RModel *instance = new RModel();
         return instance;
     }
-
-    //    int addImage(QPixmap& pixmap)
-    //    {
-    //        int d=pixmap.depth();
-    //        pixmap_map_show[cur_max_num]=pixmap.copy();
-    //        mat_map_org[cur_max_num]=RMatQImageCoverter::QPixmapToCvMat(pixmap_map_show[cur_max_num]);
-    //        mat_map_show[cur_max_num]=mat_map_org[cur_max_num].clone();
-    //        return cur_max_num++;
-    //    }
 
     int addImage(Mat &mat)
     {

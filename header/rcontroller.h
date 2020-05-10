@@ -60,7 +60,7 @@ public:
 
         QPixmap pix(260, 151);
         pix.fill(Qt::transparent);
-        QPainter pp(&pix); //新建QPainter类，在pix（画布）上进行绘图
+        QPainter pp(&pix); 
         QBrush qb(Qt::red);
         QPen qp(Qt::red);
         pp.setBrush(qb);
@@ -91,7 +91,7 @@ public:
 
             QPixmap pix(260, 151);
             pix.fill(Qt::transparent);
-            QPainter pp(&pix); //新建QPainter类，在pix（画布）上进行绘图
+            QPainter pp(&pix); 
             QBrush qb(cs[i]);
             QPen qp(cs[i]);
             pp.setBrush(qb);
