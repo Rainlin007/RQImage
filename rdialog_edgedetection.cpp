@@ -1,9 +1,8 @@
 #include "rdialog_edgedetection.h"
 #include "ui_rdialog_edgedetection.h"
 
-RDialog_EdgeDetection::RDialog_EdgeDetection(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::RDialog_EdgeDetection)
+RDialog_EdgeDetection::RDialog_EdgeDetection(QWidget *parent) : QDialog(parent),
+                                                                ui(new Ui::RDialog_EdgeDetection)
 {
     ui->setupUi(this);
     ui->listWidget->addItem("Grandient");
@@ -21,10 +20,8 @@ RDialog_EdgeDetection::~RDialog_EdgeDetection()
 
 void RDialog_EdgeDetection::on_buttonBox_accepted()
 {
-
 }
 
 void RDialog_EdgeDetection::on_listWidget_currentRowChanged(int currentRow)
 {
-
 }

@@ -3,8 +3,9 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include<QListWidgetItem>
-namespace Ui {
+#include <QListWidgetItem>
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -15,11 +16,12 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
 private:
-    static MainWindow* ins;
+    static MainWindow *ins;
 
 public:
-    static MainWindow* getInstance();
+    static MainWindow *getInstance();
 
     //related method
     void initUI();
@@ -29,18 +31,12 @@ public:
     void updateCurrentImage();
     void switchCurrentImage(int pm_num);
 
-
-
     //list
-    void addListItem(QString text,int pm_num);
-    void removeListItem(int );
-public:
+    void addListItem(QString text, int pm_num);
+    void removeListItem(int);
 
-    QGraphicsScene scene_mainshow;//current scene
-    QMenu * list_m_contextMenu;
-
-
-
+    QGraphicsScene scene_mainshow; //current scene
+    QMenu *list_m_contextMenu;
 
 private slots:
     void on_actionOpen_triggered();
@@ -81,12 +77,6 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-
-
-
-
-
-
 };
 
 #endif // MAINWINDOW_H

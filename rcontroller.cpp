@@ -1,2 +1,2 @@
 #include "rcontroller.h"
-RController* RController::ins=0;
+RController *RController::ins = 0;

@@ -22,18 +22,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
-
-
-
-
-
-
-
-#here is opencv include path   ------------------------------------------------------------------
+# OpenCV include path
 INCLUDEPATH += /usr/local/include
 INCLUDEPATH += /usr/local/include/opencv4
 INCLUDEPATH += /usr/local/include/opencv4/opencv2
-#------------------------------------------------------------------------------------------------
 
 CONFIG += c++11
 
@@ -74,22 +66,12 @@ FORMS += \
     rdialog_edgedetection.ui \
     rdialog_threshold_color.ui
 
-
-
-
-
-
-#here is opencv lib    ------------------------------------------------------------------
+# OpenCV lib
 LIBS += -L/usr/local/Cellar/opencv/4.0.1/lib \
  -lopencv_core \
  -lopencv_highgui \
  -lopencv_imgproc \
  -lopencv_imgcodecs \
-#------------------------------------------------------------------------------------------------
-
-
-
-
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
