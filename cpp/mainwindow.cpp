@@ -86,7 +86,7 @@ void MainWindow::showOverlayer(bool status)
 
 void MainWindow::updateCurrentImage()
 {
-    if (RModel::getInstance()->cur_num == -1) //called when image removed
+    if (RModel::getInstance()->getCurShowImageId() == -1) //called when image removed
     {
         scene_mainshow.clear();
         scene_mainshow.setSceneRect(QRectF(0, 0, 0, 0));
@@ -108,14 +108,14 @@ void MainWindow::switchCurrentImage(int pm_num)
     if (pm_num == -1) //called when image removed
     {
         scene_mainshow.clear();
-        RModel::getInstance()->cur_num = -1;
+        RModel::getInstance()->setCurShowImageId(-1);
         scene_mainshow.setSceneRect(QRectF(0, 0, 0, 0));
         ui->textEdit_2->setText("");
         ui->textEdit_3->setText("");
         return;
     }
 
-    RModel::getInstance()->cur_num = pm_num;
+    RModel::getInstance()->setCurShowImageId(pm_num);
     RController::genImageInfo();
     scene_mainshow.clear();
     QPixmap cp = RModel::getInstance()->getCurrentPixmap();

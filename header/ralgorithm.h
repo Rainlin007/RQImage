@@ -44,21 +44,19 @@ public:
      * @brief 
      * 
      * @param src source mat
-     * @param dst_show 4-channel mat to show, color (0, 0, 255, 255)
      * @param dst_threshold 1-channel mat to calculate
      * @param t1 lower threshold
      * @param t2 higher threshold
      */
-    static void thresholdRange(Mat &src, Mat &dst_show, Mat &dst_threshold, int t1, int t2)
+    static bool thresholdRange(Mat &src, Mat &dst_threshold, int t1, int t2)
     {
         if (src.channels() != 1)
         {
-            return;
+            return false;
         }
         int c = src.cols;
         int r = src.rows;
-        Mat dst_t = Mat::zeros(r, c, CV_8UC4);
-        Mat dst_t2 = Mat::zeros(r, c, CV_8UC1);
+        Mat dst_t = Mat::zeros(r, c, CV_8UC1);
 
         for (int i = 0; i < r; i++)
         {
@@ -66,29 +64,27 @@ public:
             {
                 if (src.at<uchar>(i, j) >= t1 && src.at<uchar>(i, j) <= t2)
                 {
-                    dst_t.at<Vec4b>(i, j) = Vec4b(0, 0, 255, 255);
-                    dst_t2.at<uchar>(i, j) = 255;
+                    dst_t.at<uchar>(i, j) = 255;
                 }
                 else
                 {
-                    dst_t.at<Vec4b>(i, j) = Vec4b(0, 0, 0, 0);
-                    dst_t2.at<uchar>(i, j) = 0;
+                    dst_t.at<uchar>(i, j) = 0;
                 }
             }
         }
-        dst_show = dst_t;
-        dst_threshold = dst_t2;
+        dst_threshold = dst_t;
+        return true;
     }
-    static void thresholdColorRange(Mat &src, Mat &dst_show, Mat &dst_threshold, int thd[3][2])
+
+    static bool thresholdColorRange(Mat &src, Mat &dst_threshold, int thd[3][2])
     {
         if (src.channels() != 3)
         {
-            return;
+            return false;
         }
         int c = src.cols;
         int r = src.rows;
-        Mat dst_t = Mat::zeros(r, c, CV_8UC4);
-        Mat dst_t2 = Mat::zeros(r, c, CV_8UC1);
+        Mat dst_t = Mat::zeros(r, c, CV_8UC1);
         for (int i = 0; i < r; i++)
         {
             for (int j = 0; j < c; j++)
@@ -97,18 +93,16 @@ public:
                     src.at<Vec3b>(i, j)[1] >= thd[1][0] && src.at<Vec3b>(i, j)[1] <= thd[1][1] &&
                     src.at<Vec3b>(i, j)[2] >= thd[2][0] && src.at<Vec3b>(i, j)[2] <= thd[2][1])
                 {
-                    dst_t.at<Vec4b>(i, j) = Vec4b(0, 0, 255, 255);
-                    dst_t2.at<uchar>(i, j) = 255;
+                    dst_t.at<uchar>(i, j) = 255;
                 }
                 else
                 {
-                    dst_t.at<Vec4b>(i, j) = Vec4b(0, 0, 0, 0);
-                    dst_t2.at<uchar>(i, j) = 0;
+                    dst_t.at<uchar>(i, j) = 0;
                 }
             }
         }
-        dst_show = dst_t;
-        dst_threshold = dst_t2;
+        dst_threshold = dst_t;
+        return true;
     }
 
     static vector<int> getHistogram(Mat &src)
@@ -152,7 +146,6 @@ public:
 
     static void getConnectedDomainLable(Mat &src, Mat &label_mat, Mat &label_mat_show, int &connected_domin_num)
     {
-
         int nb[8][2] = {
             {-1, -1},
             {-1, 0},
@@ -232,6 +225,7 @@ public:
         connected_domin_num = connectedDominNum - 1;
         delete[] rcp;
     }
+
     static bool isBinary(Mat &src)
     {
         if (src.channels() != 1)
@@ -253,6 +247,7 @@ public:
         }
         return true;
     }
+
     static void morphology(Mat &src, Mat &dst, MorphTypes mt, int size)
     {
         Mat element = getStructuringElement(MORPH_ELLIPSE, Size(size, size));
@@ -276,7 +271,6 @@ public:
                 temp_y = temp_y > 255 ? 255 : temp_y;
                 temp_x = temp_x > 255 ? 255 : temp_x;
 
-                //unsigned int temp
                 t_x.at<uchar>(i, j) = temp_x;
                 t_y.at<uchar>(i, j) = temp_y;
                 t.at<uchar>(i, j) = temp_y;

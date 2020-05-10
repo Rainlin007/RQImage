@@ -31,7 +31,7 @@ public:
         Mat dst_mat_show;
         Mat dst_mat;
         //threshold overlayer mat
-        RAlgorithm::thresholdRange(cur_mat_show, dst_mat_show, dst_mat, t1, t2);
+        RAlgorithm::thresholdRange(cur_mat_show, dst_mat, t1, t2);
         RModel::getInstance()->setOverlayerMat(dst_mat);
         MainWindow::getInstance()->showOverlayer(true);
     }
@@ -46,7 +46,7 @@ public:
         }
 
         Mat mat_overlayer;
-        RAlgorithm::thresholdColorRange(cr, dst, mat_overlayer, thd);
+        RAlgorithm::thresholdColorRange(cr, mat_overlayer, thd);
 
         RModel::getInstance()->setOverlayerMat(mat_overlayer);
         MainWindow::getInstance()->showOverlayer(true);
