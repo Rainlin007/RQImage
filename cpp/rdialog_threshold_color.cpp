@@ -95,7 +95,7 @@ void RDialog_threshold_color::on_spinBox_6_valueChanged(int arg1)
 
 void RDialog_threshold_color::on_buttonBox_accepted()
 {
-    Mat ol = RModel::getInstance()->getMatOverlayer();
+    Mat ol = RModel::getInstance()->getOverlayerMat();
     RModel::getInstance()->setCurrentImage(ol);
     this->accept();
 }

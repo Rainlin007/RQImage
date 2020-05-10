@@ -3,24 +3,47 @@
 #include <map>
 #include <QPixmap>
 #include "rheaders.h"
-#include "rutils.h"
+#include "rmat_qimage_coverter.h"
 using namespace cv;
 class RModel
 {
-private:
-    static RModel *instance;
 
 public:
-    std::map<int, Mat> mat_map_org;  //original Mat
-    std::map<int, Mat> mat_map_show; //current show Mat
+    /**
+     * @brief original mat map
+     */
+    std::map<int, Mat> mat_map_org;
 
-    std::map<int, QPixmap> pixmap_map_show; //current show Pixmap
+    /**
+     * @brief current show mat map
+     */
+    std::map<int, Mat> mat_map_show;
 
+    /**
+     * @brief current show Pixmap
+     */
+    std::map<int, QPixmap> pixmap_map_show;
+
+    /**
+     * @brief mat infomation string
+     */
     std::map<int, QString> info_string;
+
+    /**
+     * @brief orginal mat infomation
+     */
     std::map<int, QString> result_string;
 
-    QPixmap pixmap_overlayer; //overlayer image
-    Mat mat_overlayer;        //overlayer mat
+    /**
+     * @brief overlayer mat ,1-channel mat
+     * 
+     */
+    Mat mat_overlayer;
+
+    /**
+     * @brief overlayer pixmap
+     */
+    QPixmap pixmap_overlayer;
 
     int cur_num = -1;
     int cur_max_num = 0;
@@ -32,10 +55,7 @@ public:
 
     static RModel *getInstance()
     {
-        if (instance == NULL)
-        {
-            instance = new RModel();
-        }
+        static RModel *instance = new RModel();
         return instance;
     }
 
@@ -43,7 +63,7 @@ public:
     //    {
     //        int d=pixmap.depth();
     //        pixmap_map_show[cur_max_num]=pixmap.copy();
-    //        mat_map_org[cur_max_num]=RUtils::QPixmapToCvMat(pixmap_map_show[cur_max_num]);
+    //        mat_map_org[cur_max_num]=RMatQImageCoverter::QPixmapToCvMat(pixmap_map_show[cur_max_num]);
     //        mat_map_show[cur_max_num]=mat_map_org[cur_max_num].clone();
     //        return cur_max_num++;
     //    }
@@ -52,7 +72,7 @@ public:
     {
         mat_map_org[cur_max_num] = mat.clone();
         mat_map_show[cur_max_num] = mat_map_org[cur_max_num].clone();
-        QPixmap qp = RUtils::cvMatToQPixmap(mat);
+        QPixmap qp = RMatQImageCoverter::cvMatToQPixmap(mat);
         pixmap_map_show[cur_max_num] = qp.copy();
         return cur_max_num++;
     }
@@ -68,11 +88,11 @@ public:
     void setCurrentImage(Mat mat)
     {
         mat_map_show[cur_num] = mat.clone();
-        QPixmap qp = RUtils::cvMatToQPixmap(mat);
+        QPixmap qp = RMatQImageCoverter::cvMatToQPixmap(mat);
         pixmap_map_show[cur_num] = qp.copy();
     }
 
-    Mat getCurrentMatShow()
+    Mat &getCurrentMatShow()
     {
         return mat_map_show[cur_num];
     }
@@ -81,7 +101,7 @@ public:
         mat_map_show[cur_num] = mat;
     }
 
-    Mat getCurrentMatOrg()
+    Mat &getCurrentMatOrg()
     {
         return mat_map_org[cur_num];
     }
@@ -91,7 +111,7 @@ public:
         mat_map_org[cur_num] = mat;
     }
 
-    QPixmap getCurrentPixmap()
+    QPixmap &getCurrentPixmap()
     {
         return pixmap_map_show[cur_num];
     }
@@ -100,25 +120,21 @@ public:
         pixmap_map_show[cur_num] = pm.copy();
     }
 
-    QPixmap getOverlayer()
-    {
-        return pixmap_overlayer;
-    }
-    void setOverlayer(QPixmap &qp)
-    {
-        pixmap_overlayer = qp.copy();
-    }
-
-    Mat getMatOverlayer()
+    Mat &getOverlayerMat()
     {
         return mat_overlayer;
     }
-    void setMatOverlayer(Mat &mat)
+    void setOverlayerMat(Mat &mat)
     {
         mat_overlayer = mat;
+        pixmap_overlayer = RMatQImageCoverter::cvMat1ChannelToQPixmap(mat);
+    }
+    QPixmap getOverlayerPixmap()
+    {
+        return pixmap_overlayer;
     }
 
-    QString getCurrentInfoString()
+    QString &getCurrentInfoString()
     {
         return info_string[cur_num];
     }
@@ -127,7 +143,7 @@ public:
         info_string[cur_num] = t;
     }
 
-    QString getCurrentResultString()
+    QString &getCurrentResultString()
     {
         return result_string[cur_num];
     }

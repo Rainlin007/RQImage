@@ -1,15 +1,16 @@
 #ifndef RUTILS_H
 #define RUTILS_H
 #include "rheaders.h"
-
-using namespace cv;
-class RUtils
+#include <unordered_map>
+class RMatQImageCoverter final
 {
 public:
-    RUtils();
+    RMatQImageCoverter() = delete;
+    RMatQImageCoverter(const RMatQImageCoverter &) = delete;
+    RMatQImageCoverter &operator=(const RMatQImageCoverter &) = delete;
 
-public:
-    static QImage cvMatToQImage(const cv::Mat &inMat)
+    static std::unordered_map<uchar, cv::Vec3b> color_map;
+    static static QImage cvMatToQImage(const cv::Mat &inMat)
     {
         switch (inMat.type())
         {
@@ -123,6 +124,44 @@ public:
     static cv::Mat QPixmapToCvMat(const QPixmap &inPixmap, bool inCloneImageData = true)
     {
         return QImageToCvMat(inPixmap.toImage(), inCloneImageData);
+    }
+
+    /**
+     * @brief init color_map
+     * 
+     */
+    static void initColorMap()
+    {
+        for (uchar i = 1; i < 255; ++i)
+        {
+            //random color
+            color_map[i] = cv::Vec3b((i * 3 + 13) % 255, ((127 - i) * 7 + 17) % 255, ((255 - i) * 2 + 23) % 255);
+        }
+        color_map[0] = cv::Vec3b(0, 0, 0);
+        color_map[255] = cv::Vec3b(255, 255, 255);
+    }
+    /**
+     * @brief covert 1-channel mat to QPixmap with color
+     * 
+     * @param src 
+     * @param inCloneImageData 
+     * @return QPixmap 
+     */
+    static QPixmap cvMat1ChannelToQPixmap(const cv::Mat &src, bool inCloneImageData = true)
+    {
+        if (color_map.empty())
+        {
+            initColorMap();
+        }
+        cv::Mat dst = cv::Mat::zeros(src.rows, src.cols, CV_8UC3);
+        for (int i = 0; i < src.rows; ++i)
+        {
+            for (int j = 0; j < src.cols; ++j)
+            {
+                dst.at<cv::Vec3b>(i, j) = color_map[src.at<uchar>(i, j)];
+            }
+        }
+        return QPixmap::fromImage(cvMatToQImage(dst));
     }
 };
 

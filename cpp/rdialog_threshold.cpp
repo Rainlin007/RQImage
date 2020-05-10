@@ -19,7 +19,7 @@ RDialog_threshold::~RDialog_threshold()
 void RDialog_threshold::on_pushButton_clicked()
 {
 
-    Mat ol = RModel::getInstance()->getMatOverlayer();
+    Mat ol = RModel::getInstance()->getOverlayerMat();
     RModel::getInstance()->setCurrentImage(ol);
     this->accept();
 }

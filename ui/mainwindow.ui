@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -100,7 +100,7 @@
            <item row="1" column="0">
             <widget class="QToolButton" name="toolButton_2">
              <property name="text">
-              <string> duplicate Image</string>
+              <string> Duplicate Image</string>
              </property>
             </widget>
            </item>
@@ -246,7 +246,7 @@
            <item row="1" column="0">
             <widget class="QToolButton" name="toolButton_8">
              <property name="text">
-              <string>morphology process</string>
+              <string>Morphology process</string>
              </property>
             </widget>
            </item>
@@ -414,6 +414,9 @@
    <property name="text">
     <string>RGB2Gray</string>
    </property>
+   <property name="toolTip">
+    <string>RGB to Gray</string>
+   </property>
    <property name="visible">
     <bool>false</bool>
    </property>
@@ -492,6 +495,9 @@
    <property name="text">
     <string>AddImage</string>
    </property>
+   <property name="toolTip">
+    <string>Add Image</string>
+   </property>
   </action>
   <action name="actionConnected_Domin_Lable">
    <property name="text">
@@ -502,10 +508,16 @@
    <property name="text">
     <string>morphology process</string>
    </property>
+   <property name="toolTip">
+    <string>Morphology Process</string>
+   </property>
   </action>
   <action name="actionDestoryAllCvWindows">
    <property name="text">
     <string>DestoryAllCvWindows</string>
+   </property>
+   <property name="toolTip">
+    <string>Destory All CvWindows</string>
    </property>
   </action>
   <action name="actionEdge_Detection">

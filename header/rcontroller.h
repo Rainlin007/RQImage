@@ -4,13 +4,11 @@
 #include "mainwindow.h"
 #include "ralgorithm.h"
 #include "rmodel.h"
-#include "rutils.h"
+#include "rmat_qimage_coverter.h"
 #include <QPainter>
 #include <algorithm>
 class RController
 {
-private:
-    static RController *ins;
 
 public:
     RController()
@@ -18,29 +16,23 @@ public:
     }
     static RController *getInstance()
     {
-        if (ins == NULL)
-        {
-            ins = new RController();
-        }
-        return ins;
+        static RController *instance = new RController();
+        return instance;
     }
 
     static void thresholdWindow(int t1, int t2)
     {
-        Mat cr = RModel::getInstance()->getCurrentMatShow();
-        Mat dst;
-        if (cr.channels() != 1)
+        Mat &cur_mat_show = RModel::getInstance()->getCurrentMatShow();
+        if (cur_mat_show.channels() != 1)
         {
             QMessageBox::warning(NULL, "Warning", "Ensure Current Image Gray");
             return;
         }
-
-        Mat mat_overlayer;
-        RAlgorithm::thresholdRange(cr, dst, mat_overlayer, t1, t2); //threshold overlayer mat
-
-        RModel::getInstance()->setMatOverlayer(mat_overlayer);
-        QPixmap qp = RUtils::cvMatToQPixmap(dst);
-        RModel::getInstance()->setOverlayer(qp);
+        Mat dst_mat_show;
+        Mat dst_mat;
+        //threshold overlayer mat
+        RAlgorithm::thresholdRange(cur_mat_show, dst_mat_show, dst_mat, t1, t2);
+        RModel::getInstance()->setOverlayerMat(dst_mat);
         MainWindow::getInstance()->showOverlayer(true);
     }
     static void thresholdColorWindow(int thd[3][2])
@@ -56,9 +48,7 @@ public:
         Mat mat_overlayer;
         RAlgorithm::thresholdColorRange(cr, dst, mat_overlayer, thd);
 
-        RModel::getInstance()->setMatOverlayer(mat_overlayer);
-        QPixmap qp = RUtils::cvMatToQPixmap(dst);
-        RModel::getInstance()->setOverlayer(qp);
+        RModel::getInstance()->setOverlayerMat(mat_overlayer);
         MainWindow::getInstance()->showOverlayer(true);
     }
 

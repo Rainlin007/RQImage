@@ -34,7 +34,7 @@ SOURCES += \
         cpp/main.cpp \
         cpp/mainwindow.cpp \
     cpp/rmodel.cpp \
-    cpp/rutils.cpp \
+    cpp/rmat_qimage_coverter.cpp \
     cpp/rview.cpp \
     cpp/ralgorithm.cpp \
     cpp/rdialog_threshold.cpp \
@@ -47,7 +47,7 @@ SOURCES += \
 HEADERS += \
         header/mainwindow.h \
     header/rmodel.h \
-    header/rutils.h \
+    header/rmat_qimage_coverter.h \
     header/rheaders.h \
     header/rview.h \
     header/ralgorithm.h \

@@ -1,10 +1,10 @@
+#include <qfile.h>
+#include <qfiledialog.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "rmodel.h"
 #include "rheaders.h"
-#include <qfile.h>
-#include <qfiledialog.h>
-#include "rutils.h"
+#include "rmat_qimage_coverter.h"
 #include "ralgorithm.h"
 #include "rdialog_threshold.h"
 #include "rdialog_rename.h"
@@ -55,6 +55,7 @@ void MainWindow::initUI()
     connect(ui->toolButton_11, SIGNAL(clicked()), ui->actionDestoryAllCvWindows, SLOT(trigger()));
     connect(ui->toolButton_12, SIGNAL(clicked()), ui->actionEdge_Detection, SLOT(trigger()));
     connect(ui->toolButton_13, SIGNAL(clicked()), ui->actionThreshold_Color, SLOT(trigger()));
+
     //listView
     ui->listWidget_2->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -78,7 +79,7 @@ void MainWindow::showOverlayer(bool status)
     else
     {
         scene_mainshow.addPixmap(RModel::getInstance()->getCurrentPixmap());
-        scene_mainshow.addPixmap(RModel::getInstance()->getOverlayer());
+        scene_mainshow.addPixmap(RModel::getInstance()->getOverlayerPixmap());
     }
     scene_mainshow.update();
 }
@@ -195,7 +196,7 @@ void MainWindow::on_actionRGB2Gray_triggered()
     RAlgorithm::RGB2Gray(cur_result, cur_result);
     RModel::getInstance()->setCurrentMatShow(cur_result);
 
-    QPixmap pm = RUtils::cvMatToQPixmap(cur_result);
+    QPixmap pm = RMatQImageCoverter::cvMatToQPixmap(cur_result);
     RModel::getInstance()->setCurrentPixmap(pm);
 
     updateCurrentImage();
@@ -226,7 +227,7 @@ void MainWindow::on_actionReset_triggered()
     Mat mo = RModel::getInstance()->getCurrentMatOrg().clone();
     RModel::getInstance()->setCurrentMatShow(mo);
 
-    QPixmap pm = RUtils::cvMatToQPixmap(mo);
+    QPixmap pm = RMatQImageCoverter::cvMatToQPixmap(mo);
     RModel::getInstance()->setCurrentPixmap(pm);
 
     updateCurrentImage();

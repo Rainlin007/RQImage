@@ -40,6 +40,15 @@ public:
         }
         cvtColor(mat_1, mat_2, COLOR_RGB2GRAY);
     }
+    /**
+     * @brief 
+     * 
+     * @param src source mat
+     * @param dst_show 4-channel mat to show, color (0, 0, 255, 255)
+     * @param dst_threshold 1-channel mat to calculate
+     * @param t1 lower threshold
+     * @param t2 higher threshold
+     */
     static void thresholdRange(Mat &src, Mat &dst_show, Mat &dst_threshold, int t1, int t2)
     {
         if (src.channels() != 1)
